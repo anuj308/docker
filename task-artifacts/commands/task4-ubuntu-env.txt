@@ -1,0 +1,13 @@
+Task 4 - Ubuntu Environment Variable
+
+Commands run:
+docker run -dit --name college_env -e COLLEGE=CSE ubuntu bash
+docker exec college_env printenv COLLEGE
+docker stop college_env
+docker ps -a --filter name=college_env
+
+Verified output:
+CSE
+
+Stopped container status:
+college_env exited after docker stop.
