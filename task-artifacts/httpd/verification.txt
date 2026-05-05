@@ -1,0 +1,13 @@
+Task 6 - httpd Web Page Verification
+
+Container:
+simple_web
+
+Port mapping:
+0.0.0.0:8080->80/tcp
+
+Command used:
+curl http://localhost:8080
+
+Verified output:
+<h1>Welcome to Docker Web Deployment</h1>
