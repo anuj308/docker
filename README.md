@@ -97,3 +97,25 @@ curl http://localhost:8080
 docker stop simple_web
 docker rm simple_web
 ```
+
+## 7. Question 3 - docker run with Multiple Flags
+
+### Command
+
+```bash
+docker run -it --name my_app -e APP_ENV=production -v /app/data:/data ubuntu bash
+```
+
+### Meaning
+
+- `-it` starts the container in interactive terminal mode.
+- `--name my_app` gives the container the name `my_app`.
+- `-e APP_ENV=production` sets the environment variable.
+- `-v /app/data:/data` bind mounts the local directory `/app/data` to `/data` inside the container.
+
+### Cleanup
+
+```bash
+exit
+docker rm my_app
+```
