@@ -1,0 +1,19 @@
+Task 10 - Docker Volume Persistence Verification
+
+Volume:
+projectdata
+
+Mount point:
+/var/lib/docker/volumes/projectdata/_data
+
+First container:
+project_container
+
+Second container:
+project_container_new
+
+Verified persisted file content:
+This is my first volume.
+
+Copied file in this repository:
+task-artifacts/volume/report.txt
