@@ -149,3 +149,113 @@ The `cat` command verifies the content of `report.txt`. The `ls -l /project` com
 docker stop interaction_container
 docker rm interaction_container
 ```
+
+## 9. Three Practice Questions - Containers and Logs
+
+### Question 1
+
+Start an nginx container with the environment variable `ENV_MODE=production`.
+
+```bash
+docker run -d --name nginx_env -e ENV_MODE=production nginx
+```
+
+### Question 2
+
+View logs for a running container named `my_app` and follow new entries in real time.
+
+```bash
+docker logs -f my_app
+```
+
+### Question 3
+
+Start and stop a stopped container named `web_server`.
+
+```bash
+docker start web_server
+docker stop web_server
+```
+
+## 10. Task - Docker Volume Data Persistence
+
+### Commands
+
+```bash
+docker volume create projectdata
+docker volume ls
+docker volume inspect projectdata
+docker run -dit --name project_container -v projectdata:/app/data ubuntu bash
+docker exec project_container sh -c "echo 'This is my first volume.' > /app/data/report.txt"
+docker stop project_container
+docker rm project_container
+docker run -dit --name project_container_new -v projectdata:/app/data ubuntu bash
+docker exec project_container_new cat /app/data/report.txt
+```
+
+### Verified Output
+
+```text
+This is my first volume.
+```
+
+### Cleanup
+
+```bash
+docker stop project_container_new
+docker rm project_container_new
+```
+
+## 11. Task 1 - University Portal Deployment with Docker
+
+### Commands
+
+```bash
+docker volume create portaldata
+docker run -d --name college_portal -p 8080:80 -e ENV=production -v portaldata:/usr/local/apache2/htdocs httpd
+docker exec college_portal sh -c "echo '<h1>College Portal</h1><p>Environment: production</p>' > /usr/local/apache2/htdocs/index.html"
+curl http://localhost:8080
+docker logs college_portal
+```
+
+### Verified Output
+
+```html
+<h1>College Portal</h1><p>Environment: production</p>
+```
+
+### Cleanup
+
+```bash
+docker stop college_portal
+docker rm college_portal
+docker volume rm portaldata
+```
+
+## 12. Task 2 - Debugging a MySQL Container Failure
+
+### Correct Command
+
+```bash
+docker run -d --name mysql_debug \
+  -e MYSQL_ROOT_PASSWORD=rootpass \
+  -e MYSQL_DATABASE=college_db \
+  -e MYSQL_USER=college_user \
+  -e MYSQL_PASSWORD=college_pass \
+  -p 3307:3306 \
+  mysql:8
+```
+
+### Debug Commands
+
+```bash
+docker logs mysql_debug
+docker exec -it mysql_debug mysql -u root -prootpass -e "SHOW DATABASES;"
+```
+
+### Cleanup
+
+```bash
+docker stop mysql_debug
+docker rm mysql_debug
+```
