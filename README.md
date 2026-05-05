@@ -17,3 +17,12 @@ This README contains the completed answers, commands, verification steps, and cl
 - Cgroups prevent Container A from consuming all CPU by applying CPU limits or shares.
 - The PID namespace ensures Container B cannot see processes running inside Container C.
 - The network namespace allows all three containers to use port 80 internally because each container has its own isolated network stack.
+
+## 3. Multiple Choice Questions - Image Registry
+
+### Answers
+
+1. B. To store and distribute container images
+2. D. Tag
+3. C. Private registry
+4. C. Bridge between CI and CD
