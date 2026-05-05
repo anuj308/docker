@@ -1,0 +1,7 @@
+Task 7 - docker run with Multiple Flags
+
+Command:
+docker run -it --name my_app -e APP_ENV=production -v /app/data:/data ubuntu bash
+
+Purpose:
+This command starts an interactive Ubuntu container, sets APP_ENV=production, bind mounts /app/data from the host to /data in the container, and names the container my_app.

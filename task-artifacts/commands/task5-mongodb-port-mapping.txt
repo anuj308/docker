@@ -1,0 +1,17 @@
+Task 5 - MongoDB Port Mapping
+
+Command used:
+docker run -d --name DB-app -p 80:8082 mongo
+
+What happened:
+Docker began pulling the official mongo image because it was not available locally. The turn was interrupted during the pull, and after continuing, the Docker daemon was no longer reachable from this session.
+
+Command to rerun when Docker is running:
+docker run -d --name DB-app -p 80:8082 mongo
+
+Verification command:
+docker ps --filter name=DB-app
+
+Cleanup commands:
+docker stop DB-app
+docker rm DB-app

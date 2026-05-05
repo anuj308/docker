@@ -1,0 +1,21 @@
+Task 9 - Containers and Logs Evidence
+
+Real container started:
+nginx_env
+
+Command run:
+docker run -d --name nginx_env -e ENV_MODE=production nginx
+
+Verified environment variable:
+ENV_MODE=production
+
+Log command:
+docker logs nginx_env
+
+Log result:
+nginx started successfully and reported "Configuration complete; ready for start up".
+
+Commands for the other practice questions:
+docker logs -f my_app
+docker start web_server
+docker stop web_server
