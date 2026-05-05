@@ -1,0 +1,15 @@
+Task 8 - Container File and Directory Verification
+
+Container:
+interaction_container
+
+Verified report.txt content:
+This is our container interaction with our host machine.
+
+Verified /project files:
+notes.txt
+report.txt
+
+Copied files in this repository:
+task-artifacts/container-interaction/report.txt
+task-artifacts/container-interaction/notes.txt

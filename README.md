@@ -119,3 +119,33 @@ docker run -it --name my_app -e APP_ENV=production -v /app/data:/data ubuntu bas
 exit
 docker rm my_app
 ```
+
+## 8. Task - Container Interaction: File and Directory Management
+
+### Start a Container
+
+```bash
+docker run -dit --name interaction_container ubuntu bash
+```
+
+### Create Directory and Files
+
+```bash
+docker exec interaction_container mkdir /project
+docker exec interaction_container sh -c "echo 'This is our container interaction with our host machine.' > /project/report.txt"
+docker exec interaction_container cat /project/report.txt
+docker cp interaction_container:/project/report.txt ~/Desktop/report.txt
+docker exec interaction_container sh -c "echo 'These are project notes.' > /project/notes.txt"
+docker exec interaction_container ls -l /project
+```
+
+### Verification
+
+The `cat` command verifies the content of `report.txt`. The `ls -l /project` command verifies that both `report.txt` and `notes.txt` exist inside `/project`.
+
+### Cleanup
+
+```bash
+docker stop interaction_container
+docker rm interaction_container
+```
