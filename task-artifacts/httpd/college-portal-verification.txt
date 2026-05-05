@@ -1,0 +1,22 @@
+Task 11 - University Portal Verification
+
+Container:
+college_portal
+
+Environment:
+ENV=production
+
+Port mapping:
+0.0.0.0:8080->80/tcp
+
+Volume:
+portaldata
+
+Command used:
+curl http://localhost:8080
+
+Verified output:
+<h1>College Portal</h1><p>Environment: production</p>
+
+Log check:
+Apache started successfully and returned HTTP 200 for the portal page.
