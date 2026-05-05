@@ -26,3 +26,26 @@ This README contains the completed answers, commands, verification steps, and cl
 2. D. Tag
 3. C. Private registry
 4. C. Bridge between CI and CD
+
+## 4. Task #1 - Ubuntu Container with Environment Variable
+
+### Commands
+
+```bash
+docker run -it --name college_env -e COLLEGE=CSE ubuntu bash
+echo $COLLEGE
+exit
+docker ps -a
+docker stop college_env
+docker ps -a
+```
+
+### Result
+
+The command `echo $COLLEGE` prints `CSE` inside the container. After stopping the container, `docker ps -a` shows the container with status `Exited`.
+
+### Cleanup
+
+```bash
+docker rm college_env
+```
