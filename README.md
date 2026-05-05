@@ -10,3 +10,10 @@ This README contains the completed answers, commands, verification steps, and cl
 - The Linux kernel mechanism that should have prevented this is cgroups, because cgroups control and limit CPU, memory, disk I/O, and other resource usage.
 - No, namespaces alone would not solve this issue. Namespaces isolate what a container can see, but they do not limit how much memory it can consume.
 
+## 2. Task 2 - Resource Isolation and Port Conflict
+
+### Answers
+
+- Cgroups prevent Container A from consuming all CPU by applying CPU limits or shares.
+- The PID namespace ensures Container B cannot see processes running inside Container C.
+- The network namespace allows all three containers to use port 80 internally because each container has its own isolated network stack.
