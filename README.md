@@ -74,3 +74,26 @@ docker rm DB-app
 ### Note
 
 The official MongoDB image is named `mongo` on Docker Hub. The command maps host port `80` to container port `8082` as requested.
+
+## 6. Deployment Task - Simple Web Page with httpd
+
+### Commands
+
+```bash
+docker run -d --name simple_web -p 8080:80 httpd
+docker exec simple_web sh -c "echo '<h1>Welcome to Docker Web Deployment</h1>' > /usr/local/apache2/htdocs/index.html"
+curl http://localhost:8080
+```
+
+### Expected Output
+
+```html
+<h1>Welcome to Docker Web Deployment</h1>
+```
+
+### Cleanup
+
+```bash
+docker stop simple_web
+docker rm simple_web
+```
