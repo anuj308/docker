@@ -49,3 +49,28 @@ The command `echo $COLLEGE` prints `CSE` inside the container. After stopping th
 ```bash
 docker rm college_env
 ```
+
+## 5. Practice Question - MongoDB Container with Port Mapping
+
+### Command
+
+```bash
+docker run -d --name DB-app -p 80:8082 mongo
+```
+
+### Verification
+
+```bash
+docker ps
+```
+
+### Cleanup
+
+```bash
+docker stop DB-app
+docker rm DB-app
+```
+
+### Note
+
+The official MongoDB image is named `mongo` on Docker Hub. The command maps host port `80` to container port `8082` as requested.
