@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puppet Unit 1 &amp; 2 — Exam Study Guide (Theory + Practical)</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    color: #1f2430;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f4f5f7;
+  }
+  h1 { color: #243b6b; border-bottom: 3px solid #243b6b; padding-bottom: 10px; }
+  h2 {
+    color: #fff; background: #3b5aa0; padding: 10px 14px; border-radius: 6px;
+    margin-top: 40px;
+    position: sticky; top: 0; z-index: 5;
+  }
+  h2 .num { background: #ffd54a; color: #243b6b; border-radius: 4px; padding: 0 8px; margin-right: 8px; }
+  h3 { color: #3b5aa0; margin-top: 28px; }
+  pre {
+    background-color: #23272e; color: #e8eaed;
+    padding: 14px; border-radius: 6px; overflow-x: auto;
+    font-family: Consolas, Monaco, "Courier New", monospace; font-size: 14px;
+    line-height: 1.5;
+  }
+  code {
+    font-family: Consolas, Monaco, "Courier New", monospace;
+    background-color: #e4e6eb; padding: 1px 5px; border-radius: 3px; font-size: 14px;
+  }
+  pre code { background: transparent; padding: 0; color: inherit; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; background: #fff; }
+  th, td { border: 1px solid #c9cdd6; padding: 8px 10px; text-align: left; vertical-align: top; font-size: 14.5px; }
+  th { background: #dde3f0; color: #243b6b; }
+  .qa {
+    background: #fff; border: 1px solid #d5d9e2; border-left: 6px solid #3b5aa0;
+    border-radius: 6px; padding: 16px 20px 10px; margin: 18px 0;
+  }
+  .qa h3 { margin: 0 0 12px 0; color: #b03a2e; }
+  .qa h3::before { content: "Q. "; color: #3b5aa0; }
+  .marks { float: right; font-size: 13px; background: #ffe9a8; color: #7a5c00; padding: 1px 10px; border-radius: 12px; font-weight: 600; }
+  .box { border-radius: 6px; padding: 12px 16px; margin: 12px 0; }
+  .tip   { background: #e7f3e8; border-left: 5px solid #3f9142; }
+  .warn  { background: #fff3cd; border-left: 5px solid #e0a800; }
+  .imp   { background: #fdecea; border-left: 5px solid #d9534f; }
+  .step { background: #eef2fb; border-left: 5px solid #3b5aa0; }
+  .practical { border-left-color: #1e8e5a; }
+  .practical h3 { color: #1e8e5a; }
+  .practical h3::before { content: "Q. "; color: #1e8e5a; }
+  .anchor-nav a {
+    display: inline-block; background: #fff; border: 1px solid #c9cdd6; border-radius: 16px;
+    padding: 3px 12px; margin: 3px 2px; text-decoration: none; color: #3b5aa0; font-size: 14px;
+  }
+  .anchor-nav a:hover { background: #3b5aa0; color: #fff; }
+  .muted { color: #667; font-size: 14px; }
+  ul { margin: 6px 0 10px; padding-left: 24px; }
+  li { margin: 3px 0; }
+  .kbd { background:#23272e; color:#ffd54a; padding:1px 6px; border-radius:3px; font-family:Consolas,monospace; font-size:13px; }
+  @media print {
+    h2 { position: static; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: #fff; }
+  }
+</style>
+</head>
+<body>
+
+<h1>📘 Puppet — Unit 1 &amp; Unit 2 Exam Study Guide</h1>
+<p class="muted">Subject: INT333 — DevOps Advanced Configuration Management &nbsp;|&nbsp; Format: probable 5-mark questions with complete answers. Read, then practise writing each answer once on paper. Last section = practical exam steps (Master–Agent, manifest, module, certificate, Docker).</p>
+
+<div class="anchor-nav">
+  <a href="#u1">UNIT 1 — Puppet Basics</a>
+  <a href="#u2">UNIT 2 — Advanced Puppet</a>
+  <a href="#practical">PRACTICAL (Day-after-tomorrow)</a>
+  <a href="#cheat">CHEAT SHEET (read last)</a>
+</div>
+
+<!-- ==================== UNIT 1 ==================== -->
+<h2 id="u1"><span class="num">UNIT 1</span>Puppet Basics</h2>
+
+<!-- 1 -->
+<div class="qa">
+  <h3>What is Configuration Management (CM)? <span class="marks">5 marks</span></h3>
+  <ul>
+    <li><b>Definition:</b> Configuration Management is the practice of handling changes to a system systematically so that the system maintains its integrity over time.</li>
+    <li>It defines and maintains the <b>desired state</b> of every server — same software, same settings, every time.</li>
+    <li><b>Analogy:</b> Like a recipe book for your servers — it ensures every server is configured exactly the same way, every time. (Restaurant chain: same menu, same procedures, same uniforms, same table arrangement at every branch.)</li>
+    <li>In DevOps, CM plays a central role in <b>automating and standardizing environments</b> to enable continuous integration, delivery and deployment.</li>
+    <li>It keeps systems consistent, scalable and maintainable across development, testing, staging and production.</li>
+  </ul>
+  <p><b>Key Benefits (write all 5):</b></p>
+  <table>
+    <tr><th>Benefit</th><th>Meaning</th></tr>
+    <tr><td>Consistency</td><td>All servers have identical configurations</td></tr>
+    <tr><td>Scalability</td><td>Easy to manage hundreds or thousands of servers</td></tr>
+    <tr><td>Reliability</td><td>Reduces human errors</td></tr>
+    <tr><td>Auditability</td><td>Track what changes were made, and when</td></tr>
+    <tr><td>Disaster Recovery</td><td>Quick restoration of systems</td></tr>
+  </table>
+  <div class="box tip"><b>Business impact (optional extra point):</b> E-commerce company with 100 web servers — without CM, manual setup = 2 hrs/server = 200 hrs; with CM, automated = 30 min for all = 0.5 hrs. Time saved ≈ 199.5 hrs ≈ $19,950 (at $100/hr).</div>
+</div>
+
+<!-- 2 -->
+<div class="qa">
+  <h3>Explain Push and Pull configuration models. <span class="marks">5 marks</span></h3>
+  <p>CM tools use two primary models to deploy configurations: <b>Push</b> and <b>Pull</b>. They describe how configuration changes are applied and distributed across infrastructure.</p>
+  <table>
+    <tr><th></th><th>PUSH Model</th><th>PULL Model</th></tr>
+    <tr><td><b>Who initiates</b></td><td>Central control server pushes config to target machines; server initiates communication; targets are passive recipients</td><td>Target nodes periodically pull their config / check the central server for updates; targets initiate; central server acts as a configuration repository</td></tr>
+    <tr><td><b>Examples</b></td><td>Ansible, SaltStack (push mode)</td><td>Puppet, Chef</td></tr>
+    <tr><td><b>Advantages</b></td><td>• Immediate control over updates<br>• Easier to debug (direct command execution)<br>• No agent required (in Ansible)</td><td>• More scalable for large environments<br>• Nodes self-heal by periodically checking config<br>• More secure (central server needs no SSH access)<br>• Resilient to network issues; targets work independently</td></tr>
+    <tr><td><b>Disadvantages</b></td><td>• Network connectivity issues can block deployments<br>• Less scalable for large infrastructures<br>• Requires direct/open access (SSH) to targets</td><td>• Delayed deployment (depends on pull interval)<br>• Less immediate control<br>• Slower for urgent changes<br>• Requires agents and scheduling</td></tr>
+  </table>
+  <div class="box tip"><b>Scenario to conclude the answer:</b> Push — quickly patch 10 servers → use Ansible to push instantly. Pull — keep 1,000 nodes compliant → use Puppet, they pull and enforce policy every 30 minutes.</div>
+</div>
+
+<!-- 3 -->
+<div class="qa">
+  <h3>What is Puppet? Why do we use it? (Why Puppet) <span class="marks">5 marks</span></h3>
+  <ul>
+    <li><b>Definition:</b> Puppet is an <b>open-source configuration management tool</b> that uses a <b>pull-based model</b> to automate provisioning, configuration and management of servers and applications across infrastructure.</li>
+    <li>It enables <b>Infrastructure as Code (IaC)</b> — you define the desired system state using a <b>declarative language</b> (manifests describe <i>what you want</i>, not how to do it).</li>
+    <li>It can also be used as a deployment tool — it automatically deploys software on systems.</li>
+    <li>Puppet has two main parts: <b>Puppet Master (Server)</b> — central system that stores configuration (manifests); <b>Puppet Agent (Client)</b> — installed on every machine you want to configure.</li>
+  </ul>
+  <p><b>Why choose Puppet (4 reasons):</b></p>
+  <ol>
+    <li><b>Declarative language</b> — write manifests describing the desired end state ("what"), not step-by-step scripts ("how").</li>
+    <li><b>Idempotency</b> — applying the same configuration multiple times gives the same result without breaking anything. E.g. 1st run: installs Apache and starts service; 2nd run: checks it is already installed/running, does nothing; 3rd run: still does nothing (system already in desired state).</li>
+    <li><b>Cross-platform</b> — works on Linux, Windows, macOS and various Unix systems.</li>
+    <li><b>Large community &amp; enterprise support</b> — open-source + enterprise versions, and an extensive module library (<b>Puppet Forge</b>).</li>
+  </ol>
+  <p><b>Key use cases:</b> (1) Server configuration management (web servers, DB setups, app deployment), (2) Compliance management (security hardening, SOX/PCI-DSS/HIPAA, audit trails), (3) Infrastructure as Code (version-controlled, reproducible environments, dev→test→prod promotion).</p>
+</div>
+
+<!-- 4 -->
+<div class="qa">
+  <h3>Explain the Components of Puppet / Puppet Architecture. <span class="marks">5 marks</span></h3>
+  <p>Puppet follows a <b>client-server (agent/master) architecture</b>, and also supports standalone mode (<code>puppet apply</code>). Main components:</p>
+  <table>
+    <tr><th>Component</th><th>Explanation</th></tr>
+    <tr><td><b>Puppet Master (Server)</b></td><td>Central server that stores and serves configurations to clients. Functions: stores manifests and modules, compiles catalogs for agents, manages certificates (CA), serves files and templates.</td></tr>
+    <tr><td><b>Puppet Agent (Client)</b></td><td>Software that runs on managed nodes and applies configurations. Functions: requests catalogs from the master, applies configuration locally, sends reports back to the master, gathers system facts.</td></tr>
+    <tr><td><b>Manifests</b></td><td>Text files written in Puppet's domain-specific language (DSL), extension <code>.pp</code>, that describe the desired state of system resources.</td></tr>
+    <tr><td><b>Templates</b></td><td>Combine code and data to render a final document (e.g. ERB templates for dynamic config files).</td></tr>
+    <tr><td><b>Files</b></td><td>Static content that can be downloaded by the clients (e.g. index.html).</td></tr>
+    <tr><td><b>Modules</b></td><td>Reusable collections of manifests, templates and files organized in a specific directory structure.</td></tr>
+    <tr><td><b>Certificate Authority (CA)</b></td><td>Allows the master to sign the certificates (CSRs) sent by clients so secure SSL communication can happen.</td></tr>
+    <tr><td><b>Facter</b></td><td>System inventory tool that gathers <b>facts</b> about nodes (hardware, OS, network, IP, memory). The agent sends these facts to the master.</td></tr>
+    <tr><td><b>Catalog</b></td><td>A compiled document describing the desired state of a particular node, created by the master from manifests and sent to agents.</td></tr>
+  </table>
+  <p><b>Flow in one line:</b> Agent sends facts + requests catalog → Master compiles catalog from manifests/modules → Agent applies catalog → Agent sends report back.</p>
+</div>
+
+<!-- 5 -->
+<div class="qa">
+  <h3>Explain the Puppet Workflow (how Master and Agent work together). <span class="marks">5 marks</span></h3>
+  <ol>
+    <li><b>Agent requests catalog</b> from the Puppet Master (sending its facts gathered by Facter).</li>
+    <li><b>Master compiles the catalog</b> based on manifests, modules and node classification.</li>
+    <li><b>Master sends the catalog</b> to the agent.</li>
+    <li><b>Agent applies the catalog</b> to the local system (brings node to desired state).</li>
+    <li><b>Agent sends a report back</b> to the master.</li>
+  </ol>
+  <div class="box tip"><b>Diagram to draw in exam:</b> <br>
+  <code>[Agent] --(1) facts + catalog request --&gt; [Master: manifests/modules/CA]</code><br>
+  <code>[Agent] &lt;--(2) compiled catalog (over SSL, port 8140) -- [Master]</code><br>
+  <code>[Agent] --(3) applies catalog, sends report --&gt; [Master]</code></div>
+  <p>All communication happens over <b>SSL on port 8140</b>, and the master must <b>sign the agent's certificate</b> before an agent can get a catalog.</p>
+</div>
+
+<!-- 6 -->
+<div class="qa">
+  <h3>Short notes: Manifest, Template, Files, Certificate Authority. <span class="marks">5 marks</span></h3>
+  <ul>
+    <li><b>Manifest:</b> The actual code for configuring the clients — files with <code>.pp</code> extension written in Puppet DSL that declare resources (package, service, file, user). Example: <code>site.pp</code>.</li>
+    <li><b>Template:</b> Combines code and data to render a final document. Used when a config file needs dynamic content (e.g. inserting an IP address or port from facts). Usually ERB templates stored in a module's <code>templates/</code> folder.</li>
+    <li><b>Files:</b> Static content that clients download from the master (served via <code>puppet:///modules/…</code> URLs), e.g. <code>index.html</code> for a web server.</li>
+    <li><b>Certificate Authority (CA):</b> Built into the Puppet Master. When an agent first connects, it sends a certificate signing request (CSR); the CA <b>lists and signs</b> these certificates; only then can the agent communicate securely with the master over SSL. Commands: <code>puppetserver ca list</code>, <code>puppetserver ca sign --certname &lt;name&gt;</code>.</li>
+  </ul>
+</div>
+
+<!-- 7 -->
+<div class="qa">
+  <h3>Explain Installation of Puppet (Master on Linux, Agent on Windows/macOS). <span class="marks">5 marks</span></h3>
+  <p><b>Important rule:</b> Puppet <b>Master (Server) runs only on Linux</b> (Ubuntu 20.04/22.04, Debian, RHEL/CentOS, Rocky/Alma). Windows and macOS are supported only for the <b>Agent</b>.</p>
+  <p><b>A) Install Puppet Master on Ubuntu VM:</b></p>
+  <pre><code># 1. Remove old puppet completely
+sudo systemctl stop puppetserver
+sudo apt purge -y puppetserver puppet-agent puppet
+sudo rm -rf /etc/puppetlabs /opt/puppetlabs /var/log/puppetlabs /var/opt/puppetlabs
+
+# 2. Install Java (required by Puppet Server)
+sudo apt install -y openjdk-17-jdk
+
+# 3. Add Puppet 8 repository
+wget https://apt.puppet.com/puppet8-release-$(lsb_release -cs).deb
+sudo dpkg -i puppet8-release-$(lsb_release -cs).deb
+sudo apt update
+
+# 4. Install Puppet Server
+sudo apt install -y puppetserver
+
+# 5. Lower Java heap (if VM has less RAM)
+sudo sed -i 's/Xms2g/Xms512m/; s/Xmx2g/Xmx512m/' /etc/default/puppetserver
+
+# 6. Set hostname
+sudo hostnamectl set-hostname puppetmaster.example.com
+echo "127.0.0.1 puppetmaster.example.com puppetmaster" | sudo tee -a /etc/hosts
+
+# 7. Start Puppet Server
+sudo systemctl daemon-reload
+sudo systemctl enable puppetserver
+sudo systemctl start puppetserver
+sudo systemctl status puppetserver</code></pre>
+  <p><b>B) Install Agent on Windows:</b> download <code>puppet-agent-x64-latest.msi</code> from downloads.puppet.com → run installer (default options) → verify with <code>puppet --version</code>. Important paths: config <code>C:\ProgramData\PuppetLabs\puppet\etc\puppet.conf</code>, SSL certs <code>C:\ProgramData\PuppetLabs\puppet\ssl\</code>, binaries <code>C:\Program Files\Puppet Labs\Puppet\bin\</code>.</p>
+  <p><b>C) Install Agent on macOS:</b></p>
+  <pre><code>brew tap puppetlabs/puppet
+brew install --cask puppetlabs/puppet/puppet-agent
+export PATH=/opt/puppetlabs/bin:$PATH
+puppet --version</code></pre>
+  <div class="box warn"><b>Key directives of puppet.conf (with analogy):</b><br>
+  • <code>server=puppet</code> — hostname of the master the agent talks to — "call this number (boss) for work instructions."<br>
+  • <code>autoflush=true</code> — flush logs/reports to disk immediately — "write down what I'm doing instantly, no waiting."<br>
+  • <code>manage_internal_file_permissions=false</code> — don't enforce permissions on internal files like SSL certs (useful on Windows) — "don't touch file locks, the OS handles it."</div>
+  <div class="box imp"><b>If asked why the agent cannot connect on Windows:</b> Puppet Server is not supported natively on Windows — nothing listens on port 8140 because the Master only runs on Linux. Recommended setup: Master on Linux + Agent on Windows.</div>
+</div>
+
+<!-- 8 -->
+<div class="qa">
+  <h3>Short note: Puppet Development in Isolation. <span class="marks">5 marks</span></h3>
+  <ul>
+    <li>Developing/testing Puppet code <b>without touching real production servers</b> — in a safe, separate environment (VM, container, or a separate Puppet environment).</li>
+    <li>Typical isolation environments: a local <b>VM (VirtualBox/UTM)</b> running Ubuntu, a <b>Docker container</b> running <code>puppet/puppetserver</code> and <code>puppet/puppet-agent</code>, or the learning VMs.</li>
+    <li>In isolation you can create modules/manifests, run <code>puppet apply</code> locally, and validate syntax with <code>puppet parser validate</code> before code is promoted to the master.</li>
+    <li><b>Benefits:</b> mistakes don't break real servers; reproducible test environment; code can be version-controlled in Git and promoted dev → test → prod.</li>
+    <li>Puppet also supports <b>masterless mode</b> (<code>puppet apply</code>) — manifests are applied directly on the node without a master, which is also a form of isolated development.</li>
+  </ul>
+</div>
+
+<!-- 9 -->
+<div class="qa">
+  <h3>Compare CM tools (Ansible, Puppet, Chef, SaltStack, Terraform, Kubernetes+Helm). <span class="marks">5 marks</span></h3>
+  <table>
+    <tr><th>Tool</th><th>Description</th><th>Language</th><th>Use Case</th></tr>
+    <tr><td><b>Ansible</b></td><td>Agentless, simple syntax (YAML)</td><td>YAML</td><td>Provisioning, app deployment, configuration</td></tr>
+    <tr><td><b>Puppet</b></td><td>Model-driven, uses declarative DSL</td><td>Puppet DSL (Ruby-like)</td><td>Complex infrastructure, enterprise CM</td></tr>
+    <tr><td><b>Chef</b></td><td>Code-driven, good for complex configs</td><td>Ruby</td><td>Infrastructure automation, policy enforcement</td></tr>
+    <tr><td><b>SaltStack</b></td><td>Fast remote execution and CM</td><td>YAML + Jinja</td><td>Orchestration and configuration at scale</td></tr>
+    <tr><td><b>Terraform</b></td><td>Infrastructure provisioning (not CM strictly)</td><td>HCL</td><td>IaC to manage cloud infrastructure</td></tr>
+    <tr><td></td><td><b>Kubernetes + Helm</b></td><td>Manages container configurations</td><td>YAML</td><td>Declarative config for container orchestration</td></tr>
+  </table>
+  <div class="box tip"><b>CM in DevOps pipelines (extra point):</b> (1) Define IaC with Terraform/CloudFormation → (2) set up config scripts with Ansible/Puppet/Chef → (3) store everything in Git → (4) CI/CD tools (Jenkins/GitLab CI/GitHub Actions) apply configurations on deploy → (5) monitor &amp; audit with Prometheus/ELK/Datadog.</div>
+</div>
+
+<!-- ==================== UNIT 2 ==================== -->
+<h2 id="u2"><span class="num">UNIT 2</span>Advanced Puppet</h2>
+
+<!-- 10 -->
+<div class="qa">
+  <h3>What is Puppet Configuration? Explain its key components. <span class="marks">5 marks</span></h3>
+  <ul>
+    <li><b>Definition:</b> Puppet configuration is the act of defining and applying the <b>desired state</b> of systems using Puppet manifests, modules and settings, ensuring consistency and automation across many servers.</li>
+    <li>It automates configuring servers, deploying applications and enforcing system policies across multiple machines consistently.</li>
+  </ul>
+  <p><b>What Puppet defines (examples of desired state):</b> which packages should be installed (nginx, mysql), which services should be running (apache2, docker), which files should exist and their contents (/etc/hosts, config.yml), user accounts and permissions. Once defined, systems <b>converge</b> to the desired state automatically.</p>
+  <p><b>Key components:</b></p>
+  <ul>
+    <li><b>Manifests</b> — files in Puppet DSL with <code>.pp</code> extension describing desired state of resources.</li>
+    <li><b>Modules</b> — collections of manifests, files, templates for reusability (e.g. a mysql module = install + config + service).</li>
+    <li><b>Nodes</b> — node definitions decide <b>which configuration applies to which server</b> (different config for different servers).</li>
+    <li><b>Facter</b> — gathers system info (OS, IP, memory) used to make decisions in manifests.</li>
+    <li><b>Master &amp; Agents</b> — classic architecture; master stores configs/modules, agent applies them. Puppet can also run <b>masterless</b> — manifests applied directly on nodes.</li>
+  </ul>
+  <p><b>How it works:</b> (1) Admin writes manifests/modules defining desired state → (2) agent checks current system state → (3) Puppet compares current vs desired → (4) applies changes to bring the system into compliance.</p>
+</div>
+
+<!-- 11 -->
+<div class="qa">
+  <h3>Explain Puppet configuration files. <span class="marks">5 marks</span></h3>
+  <p><b>Common Puppet configuration files:</b></p>
+  <table>
+    <tr><th>File</th><th>Purpose</th></tr>
+    <tr><td><code>puppet.conf</code></td><td>Main configuration file (locations, logging, master/agent settings)</td></tr>
+    <tr><td><code>hiera.yaml</code></td><td>Hierarchical data lookup — variables and secrets</td></tr>
+    <tr><td><code>auth.conf</code></td><td>Authentication &amp; authorization rules</td></tr>
+    <tr><td><code>*.pp</code> manifests</td><td>Define the desired state</td></tr>
+    <tr><td>Module directories</td><td>Organize reusable code and resources</td></tr>
+  </table>
+  <p><b>puppet.conf sections:</b> <code>[main]</code> → global settings for all operations; <code>[agent]</code> → agent-specific settings; <code>[master]</code> → master-specific settings. Edit with:<br>
+  <code>sudo nano /etc/puppetlabs/puppet/puppet.conf</code></p>
+  <p><b>Important directives:</b></p>
+  <ul>
+    <li><code>certname</code> — unique name of the node (its certificate identity)</li>
+    <li><code>server</code> — Puppet master address the agent contacts</li>
+    <li><code>runinterval</code> — how often the agent checks in with the master</li>
+    <li><code>environment</code> — which environment (production etc.) the node belongs to</li>
+  </ul>
+</div>
+
+<!-- 12 -->
+<div class="qa">
+  <h3>How do you manage packages in Puppet? Explain the package resource. <span class="marks">5 marks</span></h3>
+  <ul>
+    <li>Managing packages is a core part of configuration management — Puppet installs, removes or upgrades software on nodes in a <b>declarative way</b>.</li>
+    <li>Declarative syntax ensures <b>idempotency</b> — running the same manifest twice won't break the system.</li>
+    <li>Puppet has built-in resource types: <b>package, service, file</b> (also user, exec…).</li>
+    <li>Manifests usually live in <code>/etc/puppetlabs/code/environments/production/manifests/</code>.</li>
+  </ul>
+  <p><b>Syntax of package resource:</b></p>
+  <pre><code>package { 'package_name':
+  ensure   => 'installed',   # or 'latest', 'absent', 'purged'
+  provider => 'apt',         # optional: apt, yum, dnf, gem
+}</code></pre>
+  <p><b>Example — install a package:</b></p>
+  <pre><code>package { 'vim':
+  ensure => installed,
+}</code></pre>
+  <p><b>Example — install multiple packages:</b></p>
+  <pre><code>package { ['git', 'curl', 'wget']:
+  ensure => installed,
+}</code></pre>
+  <p><b>Full example — package + service (nginx):</b></p>
+  <pre><code>package { 'nginx':
+  ensure => installed,
+}
+service { 'nginx':
+  ensure  => running,
+  enable  => true,
+  require => Package['nginx'],
+}</code></pre>
+  <p>Run it (masterless/standalone) with: <code>puppet apply nginx.pp</code></p>
+  <div class="box tip"><b>ensure values meaning:</b> <code>installed</code> = just install; <code>latest</code> = install + always upgrade to newest; <code>absent</code> = remove package; <code>purged</code> = remove package + config files.</div>
+</div>
+
+<!-- 13 -->
+<div class="qa">
+  <h3>What are Puppet Modules? Explain the module structure and how to create one. <span class="marks">5 marks</span></h3>
+  <ul>
+    <li><b>Definition:</b> A Puppet module is a <b>self-contained unit of Puppet code</b> that includes manifests, files, templates and other resources to manage a particular system configuration or application.</li>
+    <li>Modules help organize and reuse code by splitting it into several manifests. <b>Modules = reusable bundles of Puppet code.</b></li>
+  </ul>
+  <p><b>Why use modules (3 reasons):</b> <b>Reusability</b> (write once, use on multiple nodes), <b>Organization</b> (related configs stay together), <b>Sharing</b> (Puppet Forge community modules).</p>
+  <p><b>Module structure:</b></p>
+  <table>
+    <tr><th>Folder / file</th><th>Contains</th></tr>
+    <tr><td><code>manifests/</code></td><td>Puppet code (.pp). <code>init.pp</code> defines the main class.</td></tr>
+  <tr><td><code>files/</code></td><td>Static files copied to nodes (e.g. index.html)</td></tr>
+    <tr><td><code>templates/</code></td><td>ERB templates for dynamic content</td></tr>
+    <tr><td><code>metadata.json</code></td><td>Describes the module — name, author, dependencies</td></tr>
+  </table>
+  <p><b>Creating a module in Puppet 8 (example: apache):</b></p>
+  <pre><code># 1. Create skeleton
+sudo mkdir -p /etc/puppetlabs/code/environments/production/modules/apache/{manifests,files,templates}
+cd /etc/puppetlabs/code/environments/production/modules/apache
+
+# (if permission issue)
+sudo chown -R $USER:$USER /etc/puppetlabs/code/environments/production/modules
+
+# 2. Create init.pp
+sudo touch manifests/init.pp</code></pre>
+  <p><b>3. Add the main class in init.pp (Ubuntu):</b></p>
+  <pre><code>class apache {
+  package { 'apache2':
+    ensure => installed,
+  }
+  service { 'apache2':
+    ensure  => running,
+    enable  => true,
+    require => Package['apache2'],
+  }
+  file { '/var/www/html/index.html':
+    ensure  => file,
+    source  => 'puppet:///modules/apache/index.html',
+    require => Package['apache2'],
+  }
+}</code></pre>
+  <p><b>4. Add static file</b> <code>modules/apache/files/index.html</code> → <code>&lt;h1&gt;Welcome to My Apache Server&lt;/h1&gt;</code></p>
+  <p><b>5. Include in site.pp</b> (<code>/etc/puppetlabs/code/environments/production/manifests/site.pp</code>):</p>
+  <pre><code>node default {
+  include apache
+}</code></pre>
+  <p><b>6. Apply on agent:</b> <code>sudo puppet agent -t</code> → installs apache2, starts service, copies index.html.</p>
+  <div class="box tip"><b>Scenario:</b> A company runs multiple microservices; each needs Nginx. Instead of repeating the same manifest, they just <code>include webserver</code> module on every node.</div>
+</div>
+
+<!-- 14 -->
+<div class="qa">
+  <h3>How does one module manage Apache on Ubuntu, macOS and Windows? (case … $facts) <span class="marks">5 marks</span></h3>
+  <p>One single module can handle all OSes using the <b>case statement on the OS family fact</b> — this is "making configuration dynamic":</p>
+  <pre><code>class apache {
+  case $facts['os']['family'] {
+    'Debian': {
+      package { 'apache2': ensure => installed }
+      service { 'apache2': ensure => running, enable => true,
+                require => Package['apache2'] }
+      file { '/var/www/html/index.html':
+        ensure => file, source => 'puppet:///modules/apache/index.html',
+        require => Package['apache2'] }
+    }
+    'Darwin': {
+      service { 'org.apache.httpd': ensure => running, enable => true,
+                provider => launchd }
+      file { '/Library/WebServer/Documents/index.html':
+        ensure => file, source => 'puppet:///modules/apache/index.html' }
+    }
+    'Windows': {
+      package { 'apache-httpd': ensure => installed, provider => chocolatey }
+      service { 'Apache2.4': ensure => running, enable => true,
+                require => Package['apache-httpd'] }
+      file { 'C:/Apache24/htdocs/index.html':
+        ensure => file, source => 'puppet:///modules/apache/index.html',
+        require => Package['apache-httpd'] }
+    }
+    default: {
+      fail("Apache is not supported on ${facts['os']['family']}")
+    }
+  }
+}</code></pre>
+  <p><b>How it works:</b> Puppet detects the agent OS automatically via <code>$facts['os']['family']</code> → Ubuntu/Debian installs apache2 into /var/www/html; macOS enables built-in Apache via launchd; Windows installs Apache via Chocolatey into C:/Apache24/htdocs. You only need <code>include apache</code> in the node definition — no separate files per OS.</p>
+  <p>(Alternative: three separate classes <code>apache</code>, <code>apache_macos</code>, <code>apache_windows</code> and node definitions: <code>node 'ubuntu-agent' { include apache }</code> etc.)</p>
+</div>
+
+<!-- 15 -->
+<div class="qa">
+  <h3>Explain Connecting Puppet Agent with Puppet Master (setup + certificate process). <span class="marks">5 marks</span></h3>
+  <p>This is the most important practical topic. Step summary:</p>
+  <p><b>Step 1 — Configure the Master (Ubuntu):</b></p>
+  <pre><code>sudo hostnamectl set-hostname puppetmaster.example.com
+# /etc/hosts on master:  127.0.0.1 puppetmaster.example.com puppetmaster
+
+# /etc/puppetlabs/puppet/puppet.conf
+[main]
+certname = puppetmaster.example.com
+server = puppetmaster.example.com
+environment = production
+
+sudo systemctl enable --now puppetserver
+sudo ss -tlnp | grep 8140      # verify master listens on 8140
+sudo ufw allow 8140            # open firewall port if ufw enabled</code></pre>
+  <p><b>Step 2 — Configure the Agent (any OS):</b></p>
+  <pre><code># /etc/puppetlabs/puppet/puppet.conf   (Windows: C:\ProgramData\PuppetLabs\puppet\etc\puppet.conf)
+[main]
+certname = agent1.example.com        # unique per node
+server = puppetmaster.example.com    # master's address
+environment = production
+runinterval = 1h
+
+# agent's /etc/hosts — map master name to its IP
+192.168.64.5   puppetmaster.example.com puppet</code></pre>
+  <p><b>Step 3 — First agent run → sends CSR:</b></p>
+  <pre><code>sudo puppet agent --test      # -t = verbose one-time run
+# Output: "Creating a new SSL certificate request / fingerprint ..." (waits for signature)</code></pre>
+  <p><b>Step 4 — Master signs the certificate:</b></p>
+  <pre><code>sudo /opt/puppetlabs/bin/puppetserver ca list
+sudo /opt/puppetlabs/bin/puppetserver ca sign --certname agent1.example.com</code></pre>
+  <p><b>Step 5 — Run agent again → gets catalog and applies it:</b></p>
+  <pre><code>sudo puppet agent --test</code></pre>
+  <div class="box tip"><b>Autosigning (optional):</b> create <code>/etc/puppetlabs/puppet/autosign.conf</code> with <code>*.example.com</code> and restart puppetserver — new agents are signed automatically.</div>
+  <div class="box warn"><b>Common troubleshooting:</b> connection refused → master not running / port 8140 blocked / wrong server name in puppet.conf or /etc/hosts; SSL errors → clean old certs (<code>sudo rm -rf /etc/puppetlabs/puppet/ssl</code> on agent, re-run); cert mismatch → certname in puppet.conf must match hostname mapping.</div>
+</div>
+
+<!-- 16 -->
+<div class="qa">
+  <h3>Short note: Puppet Classes and Functions (incl. Custom Functions). <span class="marks">5 marks</span></h3>
+  <ul>
+    <li><b>Class:</b> A named block of Puppet code that groups resources (packages, services, files) which together configure one thing, e.g. <code>class apache { … }</code>. Declared/used with <code>include apache</code>. A class can take <b>parameters</b> and is the unit that modules expose — <code>init.pp</code> must contain the class matching the module name.</li>
+    <li><b>Defined type:</b> like a class but can be declared multiple times with different titles (created with <code>define</code>).</li>
+    <li><b>Functions:</b> perform actions/return values while the catalog is being compiled, e.g. built-ins: <code>include</code>, <code>require</code>, <code>fail()</code>, <code>template()</code>, <code>lookup()</code>.</li>
+    <li><b>Custom functions:</b> user-written functions in Puppet language saved in a module's <code>functions/</code> directory (e.g. <code>functions/mymod::greeting.pp</code>) or in Ruby for advanced logic. They extend Puppet beyond built-ins — e.g. a custom function that computes a value from facts.</li>
+    <li>Example of using a function + variable in a manifest: <code>$greeting = "Welcome to ${facts['hostname']}"</code>, then <code>file { '/tmp/greet.txt': content =&gt; $greeting }</code>.</li>
+  </ul>
+</div>
+
+<!-- 17 -->
+<div class="qa">
+  <h3>Explain Using Puppet via Command Line / Managing Resources with <code>puppet apply</code>. <span class="marks">5 marks</span></h3>
+  <ul>
+    <li><b>Masterless mode:</b> with <code>puppet apply</code> a single machine applies a manifest directly — no master needed. Good for testing and one-off configuration.</li>
+    <li>Agents normally run as a service; you can also trigger a run manually with <code>puppet agent -t</code> (test mode: one run, verbose output).</li>
+  </ul>
+  <p><b>Important commands (write examples):</b></p>
+  <pre><code>puppet --version                 # show installed version
+sudo puppet apply nginx.pp       # apply a manifest locally (standalone)
+sudo puppet agent --test         # one-time agent run against the master
+sudo puppet agent -t             # same thing (short form)
+puppet config print confdir      # where puppet keeps its config
+puppet config print manifest     # default manifests directory
+puppet config print modulepath   # where modules are searched
+puppet config print server       # which server agent talks to
+puppet config set server &lt;ip&gt; --section main   # change master address
+puppet config set certname &lt;name&gt; --section main
+puppet parser validate file.pp   # check manifest syntax (no output = OK)
+puppet resource package vim      # inspect/manage a resource from CLI
+sudo /opt/puppetlabs/bin/puppetserver ca list    # list pending certs (master)
+sudo /opt/puppetlabs/bin/puppetserver ca sign --certname &lt;name&gt;</code></pre>
+  <div class="box tip"><b>puppet apply vs puppet agent:</b> <code>apply</code> = local manifest, no master (masterless); <code>agent</code> = fetches catalog from master using certificates. Both are idempotent.</div>
+</div>
+
+<!-- 18 -->
+<div class="qa">
+  <h3>Short notes: Monitoring Web Servers, Load Balancing Clusters, Scaling Puppet, Making Configuration Dynamic, Extending Puppet, Puppet Manifests. <span class="marks">5 marks</span></h3>
+  <p><b>1) Monitoring Web Servers (with Puppet):</b> Puppet can deploy and keep web servers in the desired state — install package (apache2/nginx), keep service <code>ensure =&gt; running, enable =&gt; true</code>, deploy the site file, and monitor/verify the service; any drift is corrected automatically on the next run.</p>
+  <p><b>2) Load Balancing Clusters:</b> Puppet can manage a group (cluster) of identical web servers behind a load balancer — the same module is included on every web node so all have identical configuration, and the load balancer config (e.g. nginx upstream) is managed as another file resource so traffic is distributed across the cluster.</p>
+  <p><b>3) Scaling Puppet Environment:</b> as the number of nodes grows: use <code>runinterval</code> to spread agent check-ins, add more <b>compile masters</b> (puppet compilers) behind a load balancer, separate the CA, use autosigning, and organize code into <b>environments</b> (production, development) and modules.</p>
+  <p><b>4) Making Configuration Dynamic:</b> use <b>Facter facts</b> in manifests so the same code adapts per node — e.g. <code>case $facts['os']['family'] { … }</code>, <code>content =&gt; "Host: ${facts['networking']['ip']}"</code>, and <b>templates</b> (ERB) that insert facts into config files. Also <code>runinterval</code> settings, node definitions, and variables.</p>
+  <p><b>5) Extending Puppet:</b> add capabilities Puppet doesn't have built-in — custom <b>modules</b> from Puppet Forge, custom <b>functions</b>, custom <b>resource types/providers</b>, and custom facts (via Facter).</p>
+  <p><b>6) Puppet Manifests:</b> files with <code>.pp</code> extension containing Puppet DSL code that declares the desired state of resources. Located in <code>/etc/puppetlabs/code/environments/production/manifests/</code> (e.g. <code>site.pp</code> — entry point that contains node definitions and <code>include</code> statements). Validate before applying: <code>puppet parser validate site.pp</code>.</p>
+</div>
+
+<!-- ==================== PRACTICAL ==================== -->
+<h2 id="practical"><span class="num">PRACTICAL</span>Day-After-Tomorrow — Do-It-Yourself Steps</h2>
+<p class="muted">Questions will be like: "connect the agent to the master", "do this in a manifest", "create a module", "sign the certificate". Method 1 = Docker (used in class, fastest in exam), Method 2 = VM (Ubuntu master + Windows/macOS agent).</p>
+
+<div class="qa practical">
+  <h3>Method 1 — Puppet Master + Agent using Docker (from three.md) <span class="marks">know by heart</span></h3>
+  <p><b>A. Start the two containers:</b></p>
+  <pre><code>docker --version &amp;&amp; docker info                    # 1. check docker
+docker pull puppet/puppetserver                    # 2. server image
+docker pull puppet/puppet-agent                    # 3. agent image
+docker run -d --name puppet-server --hostname puppet-server -p 8140:8140 puppet/puppetserver
+docker ps                                          # 5. both running?
+docker logs puppet-server                          # 6. check server logs
+docker run -dit --name puppet-agent --hostname puppet-agent \
+  puppet/puppet-agent agent --verbose --no-daemonize --server puppetserver</code></pre>
+  <p><b>B. Point the agent at the server IP and run first test:</b></p>
+  <pre><code># 8/9. get IPs
+docker inspect -f "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" puppet-server
+docker inspect -f "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" puppet-agent
+
+docker exec -it puppet-agent bash                  # 10. enter agent
+hostname                                           # 11. puppet-agent
+puppet --version
+puppet config print server
+puppet config set server &lt;SERVER_IP&gt; --section main    # 14. e.g. 172.17.0.2
+puppet config set certname puppet-agent --section main # 15. set cert name
+puppet agent --test                                # 16. → creates certificate request, waits</code></pre>
+  <p><b>C. On the server — sign the certificate, write the manifest:</b></p>
+  <pre><code>docker exec -it puppet-server puppetserver ca list              # 17. pending request shown
+docker exec -it puppet-server puppetserver ca sign --certname puppet-agent   # 18. sign it
+docker exec -it puppet-server puppetserver ca list --all        # 19. verify (signed)
+
+# 21-24. create and edit site.pp inside server
+docker exec -it puppet-server bash
+vi /etc/puppetlabs/code/environments/production/manifests/site.pp
+# press i, then type:
+file { '/tmp/hello.txt':
+  ensure  => file,
+  content => "Hello from Puppet!\n",
+  mode    => '0644',
+}
+# save: Esc, then :wq
+
+puppet parser validate /etc/puppetlabs/code/environments/production/manifests/site.pp  # 26. silent = valid
+exit</code></pre>
+  <p><b>D. Run the agent → verify:</b></p>
+  <pre><code>docker exec -it puppet-agent puppet agent --test                # 28. applies the catalog
+docker exec -it puppet-agent cat /tmp/hello.txt                 # → Hello from Puppet!
+docker exec -it puppet-agent cat /var/lib/puppet/...            # (optional) check state</code></pre>
+  <div class="box tip"><b>One-line story to remember the order:</b> pull both images → run server (port 8140) → run agent → set server IP + certname in agent → <code>agent --test</code> (CSR) → <code>ca list</code> → <code>ca sign</code> → write site.pp on server → validate → <code>agent --test</code> again → check the file.</div>
+  <div class="box warn"><b>Troubleshooting:</b> connection refused → is server container up + port 8140 (<code>docker ps</code>, <code>docker logs puppet-server</code>); SSL error → wait a few min for server certs or <code>docker restart puppet-server</code>; wrong server IP → <code>puppet config print server</code> inside agent; start over → <code>docker rm -f puppet-server puppet-agent</code> then re-create.</div>
+</div>
+
+<div class="qa practical">
+  <h3>Method 2 — Ubuntu VM Master + Windows/macOS Agent <span class="marks">VM method</span></h3>
+  <p><b>On Ubuntu (Master) — install:</b></p>
+  <pre><code>sudo apt update &amp;&amp; sudo apt upgrade -y
+sudo apt purge puppet-agent puppetserver -y        # remove old
+sudo rm -rf /etc/puppetlabs /opt/puppetlabs
+sudo apt install openjdk-17-jdk -y
+wget https://apt.puppet.com/puppet8-release-jammy.deb
+sudo dpkg -i puppet8-release-jammy.deb
+sudo apt update
+sudo apt install puppetserver puppet-agent -y
+
+sudo hostnamectl set-hostname puppetmaster.example.com
+# /etc/hosts:  127.0.0.1 puppetmaster.example.com puppetmaster
+
+# /etc/puppetlabs/puppet/puppet.conf
+[main]
+certname = puppetmaster.example.com
+server = puppetmaster.example.com
+environment = production
+
+sudo systemctl enable --now puppetserver
+sudo ss -tlnp | grep 8140
+sudo ufw allow 8140</code></pre>
+  <p><b>On Windows Agent:</b> install <code>puppet-agent-x64-latest.msi</code> → rename PC (PowerShell admin): <code>Rename-Computer -NewName "win-agent" -Force -Restart</code> → add to <code>C:\Windows\System32\drivers\etc\hosts</code>: <code>&lt;master-ip&gt; puppetmaster.example.com puppetmaster</code> → edit <code>C:\ProgramData\PuppetLabs\puppet\etc\puppet.conf</code>:</p>
+  <pre><code>[main]
+certname = win-agent.example.com
+server = puppetmaster.example.com
+environment = production
+runinterval = 1h</code></pre>
+  <p><b>On macOS Agent:</b> <code>brew tap puppetlabs/puppet</code> → <code>brew install --cask puppet-agent</code> → <code>export PATH=/opt/puppetlabs/bin:$PATH</code> → puppet.conf with <code>certname = mac-agent.example.com</code>, <code>server = puppetmaster.example.com</code> → add master IP to /etc/hosts.</p>
+  <p><b>Connect + sign (same as Docker method):</b></p>
+  <pre><code>puppet agent --test                                   # on agent → sends CSR
+sudo /opt/puppetlabs/bin/puppetserver ca list         # on master
+sudo /opt/puppetlabs/bin/puppetserver ca sign --certname win-agent.example.com
+puppet agent --test                                   # on agent → success</code></pre>
+</div>
+
+<div class="qa practical">
+  <h3>Manifest tasks (write + apply) — every variant your files show <span class="marks">practise writing</span></h3>
+  <p><b>1. Simple file (site.pp):</b></p>
+  <pre><code>file { '/tmp/hello.txt':
+  ensure  => file,
+  content => "Hello from Puppet!\n",
+  mode    => '0644',
+}</code></pre>
+  <p><b>2. Package + service (nginx.pp) — apply masterless:</b></p>
+  <pre><code>package { 'nginx': ensure => installed }
+service { 'nginx':
+  ensure  => running,
+  enable  => true,
+  require => Package['nginx'],
+}</code></pre>
+  <p>Apply: <code>puppet apply nginx.pp</code></p>
+  <p><b>3. site.pp with node definitions + module:</b></p>
+  <pre><code>node default {
+  include apache
+}</code></pre>
+  <p><b>4. Validate + apply:</b> <code>puppet parser validate site.pp</code> → <code>puppet apply site.pp</code> (local) or <code>puppet agent -t</code> (via master).</p>
+</div>
+
+<div class="qa practical">
+  <h3>Module creation (apache) — full steps as done in class <span class="marks">practise writing</span></h3>
+  <pre><code>sudo mkdir -p /etc/puppetlabs/code/environments/production/modules/apache/{manifests,files,templates}
+sudo touch /etc/puppetlabs/code/environments/production/modules/apache/manifests/init.pp
+# edit init.pp → class apache { package… service… file… }   (see Q13 answer)
+# create files/index.html with &lt;h1&gt;Welcome to My Apache Server&lt;/h1&gt;
+# site.pp:  node default { include apache }
+sudo puppet agent -t    # apply via master
+# verify: open http://localhost/ → "Welcome to My Apache Server"</code></pre>
+  <p>Directory creation if missing: <code>sudo mkdir -p /etc/puppetlabs/code/environments/production/manifests</code> and <code>…/modules</code>. Fix permissions: <code>sudo chown -R $USER:$USER /etc/puppetlabs/code/environments/production/modules</code>.</p>
+</div>
+
+<!-- ==================== CHEAT SHEET ==================== -->
+<h2 id="cheat"><span class="num">CHEAT</span>Last-Minute Cheat Sheet</h2>
+
+<div class="qa">
+  <h3>Definitions in one line (memorize word-to-word)</h3>
+  <ul>
+    <li><b>Configuration Management:</b> practice of handling changes systematically so a system maintains integrity over time.</li>
+    <li><b>Puppet:</b> open-source configuration management tool, pull-based, enables IaC with a declarative language.</li>
+    <li><b>Manifest:</b> .pp file in Puppet DSL describing desired state.</li>
+    <li><b>Module:</b> self-contained bundle of manifests + files + templates (reusable).</li>
+    <li><b>Template:</b> code + data → rendered final document (ERB, dynamic content).</li>
+    <li><b>File (server store):</b> static content downloaded by clients.</li>
+    <li><b>Facter:</b> gathers system facts (hardware, OS, network) from nodes.</li>
+    <li><b>Catalog:</b> compiled document describing desired state of one node, made by master from manifests.</li>
+    <li><b>Certificate Authority:</b> master component that signs agent certificates for SSL trust.</li>
+    <li><b>Idempotency:</b> same config applied many times = same result, no side effects.</li>
+    <li><b>Push:</b> server initiates (Ansible, SaltStack). <b>Pull:</b> node initiates (Puppet, Chef).</li>
+    <li><b>Agent:</b> requests catalogs, applies config, reports back, gathers facts.</li>
+    <li><b>Master:</b> stores manifests/modules, compiles catalogs, manages certificates, serves files/templates.</li>
+  </ul>
+</div>
+
+<div class="qa">
+  <h3>Port, paths &amp; numbers (frequently asked)</h3>
+  <ul>
+    <li><b>Port 8140</b> — Puppet master listens; all master-agent communication is SSL on 8140.</li>
+    <li><b>Production code dir:</b> <code>/etc/puppetlabs/code/environments/production/</code> (manifests/ + modules/)</li>
+    <li><b>puppet.conf:</b> Linux <code>/etc/puppetlabs/puppet/puppet.conf</code> · Windows <code>C:\ProgramData\PuppetLabs\puppet\etc\puppet.conf</code></li>
+    <li><b>Windows paths:</b> SSL certs <code>C:\ProgramData\PuppetLabs\puppet\ssl\</code> · binaries <code>C:\Program Files\Puppet Labs\Puppet\bin\</code></li>
+    <li><b>Java:</b> Puppet Server needs <code>openjdk-17-jdk</code>; reduce heap with Xms512m/Xmx512m on small VMs.</li>
+    <li><b>Master runs only on Linux</b>; agent runs on Linux, Windows, macOS.</li>
+    <li><b>runinterval</b> — how often agent checks in (e.g. 30m / 1h).</li>
+  </ul>
+</div>
+
+<div class="qa">
+  <h3>Command one-liners (say them out loud once)</h3>
+  <pre><code>puppet --version                    puppet agent --test / -t
+puppet apply file.pp                puppet parser validate file.pp
+puppet config print confdir|manifest|modulepath|server
+puppet config set server &lt;ip&gt; --section main
+puppetserver ca list                puppetserver ca sign --certname &lt;name&gt;
+puppetserver ca revoke|clean --certname &lt;name&gt;      # optional
+ufw allow 8140                      systemctl status puppetserver
+docker run -d --name puppet-server --hostname puppet-server -p 8140:8140 puppet/puppetserver
+docker exec -it puppet-agent puppet agent --test
+docker exec -it puppet-server puppetserver ca sign --certname puppet-agent</code></pre>
+</div>
+
+<div class="qa">
+  <h3>Order of the master-agent story (memorize the 8 steps)</h3>
+  <ol>
+    <li>Install master (Linux) + agent</li>
+    <li>Configure puppet.conf on both (certname, server, environment)</li>
+    <li>Map hostnames in /etc/hosts; open port 8140</li>
+    <li>Start puppetserver; verify with <code>ss -tlnp | grep 8140</code></li>
+    <li><code>puppet agent --test</code> on agent → sends CSR</li>
+    <li><code>puppetserver ca list</code> → <code>ca sign --certname …</code> on master</li>
+    <li><code>puppet agent --test</code> again → fetches and applies catalog</li>
+    <li>Verify the result (file created / service running / web page)</li>
+  </ol>
+</div>
+
+<div class="qa">
+  <h3>Most-likely "what is" questions — answer in 2 lines each</h3>
+  <ul>
+    <li><b>What is site.pp?</b> The entry-point manifest in production environment; contains node definitions and include statements applied to agents.</li>
+    <li><b>What is a catalog?</b> Compiled desired-state document for one node; master compiles it from manifests+facts; agent applies it.</li>
+    <li><b>What is Facter?</b> Inventory tool that collects facts (OS, IP, memory) sent with each agent run so manifests can adapt.</li>
+    <li><b>What is idempotency?</b> Applying the same manifest repeatedly gives the same result — 1st run changes, later runs do nothing.</li>
+    <li><b>What is the difference between manifest and module?</b> Manifest = single .pp code file; module = organized bundle of manifests+files+templates+metadata, reusable.</li>
+    <li><b>What is the difference between puppet apply and puppet agent?</b> apply = local, masterless, one manifest; agent = gets catalog from master over SSL (port 8140).</li>
+    <li><b>Why certificate signing?</b> Master and agent must trust each other (SSL); master's CA signs the agent's CSR before serving any catalog.</li>
+    <li><b>What is node classification?</b> Deciding which configuration/classes apply to which node (node definitions in site.pp).</li>
+    <li><b>What is an environment in Puppet?</b> Isolated code branch like production/development at /etc/puppetlabs/code/environments/.</li>
+    <li><b>What is Puppet Forge?</b> Public repository of community-made modules you can reuse.</li>
+  </ul>
+</div>
+
+<p class="muted" style="margin-top:30px; border-top:1px solid #ccc; padding-top:10px;">
+Prepared from: devopspuppetsyllabus.pdf · unit12full.pdf · UNIT1 PPT1/2/3 · Unit2 PPT1/2 · Puppet Setup mac+utm.pptx · puppet setup windows+ubuntu(vm).pptx · Puppet_Docker_Setup_Guide.pptx · three.md · site.pp — matches your class material exactly. Good luck! 🍀
+</p>
+
+</body>
+</html>

@@ -1,0 +1,289 @@
+package { ['nginx' , 'haproxy']:
+           ensure => installed ,
+              }
+       service { 'nginx' :
+           ensure => running,
+           enable => true,
+           require => Package['nginx'],
+               }
+       service { 'haproxy':
+            ensure => running,
+            enable => true,
+            require => Package['haproxy'],
+               }
+       file { '/opt/web1':
+            ensure => directory,
+           }
+
+       file { '/opt/web1/index.html':
+           ensure => file,
+           content => "<html><head>
+<title>webserver1</title></head>
+                        <body><h1> t
+his is my web server
+ 1  served from port 8081</h1>
+                        </body></html>",
+                         }
+        file { '/opt/web2':
+             ensure => directory ,
+            }
+        file{ '/opt/web2/index.html':
+               ensure => file ,
+               content => "<html><head><title>webserver2
+</title></head><body>
+                           <h1> this is my webserver
+ server from port 8082</h1></body><>
+                           </html>",
+              }
+file { '/etc/nginx/sites-available/backend1':
+    ensure  => file,
+    content => 'server {
+    listen 8081;
+    root /opt/web1;
+    index index.html;
+}
+',
+    notify  => Service['nginx'],
+  }
+ 
+  file { '/etc/nginx/sites-available/backend2':
+    ensure  => file,
+    content => 'server {
+    listen 8082;
+    root /opt/web2;
+    index index.html;
+}
+',
+    notify  => Service['nginx'],
+  }
+
+27. Enable the sites
+
+Add:
+  file { '/etc/nginx/sites-enabled/backend1':
+    ensure => link,
+    target => '/etc/nginx/sites-available/backend1',
+    notify => Service['nginx'],
+  }
+ 
+  file { '/etc/nginx/sites-enabled/backend2':
+    ensure => link,
+    target => '/etc/nginx/sites-available/backend2',
+    notify => Service['nginx'],
+  }
+
+28. Remove default Nginx site
+
+Add:
+  file { '/etc/nginx/sites-enabled/default':
+    ensure => absent,
+    notify => Service['nginx'],
+  }
+Now Puppet manages our complete Nginx configuration.
+
+
+      }
+}
+
+29. Test Nginx configuration manually
+On Agent:
+sudo nginx -t
+Expected:
+syntax is ok
+test is successful
+Then:
+sudo systemctl restart nginx
+Test:
+curl http://localhost:8081
+Expected:
+<h1>WEB SERVER 1</h1>
+Then:
+curl http://localhost:8082
+Expected:
+<h1>WEB SERVER 2</h1>
+Excellent.
+We now have two backend web servers.
+
+PART F — CONFIGURE HAProxy
+Now we'll put HAProxy in front.
+
+
+
+30. Puppet-manage HAProxy
+Add this to site.pp:
+  file { '/etc/haproxy/haproxy.cfg':
+    ensure  => file,
+    content => 'global
+    log /dev/log local0
+    log /dev/log local1 notice
+    daemon
+ 
+defaults
+    log global
+    mode http
+    option httplog
+    option dontlognull
+    timeout connect 5s
+    timeout client  30s
+    timeout server  30s
+ 
+frontend web_frontend
+    bind *:80
+    default_backend web_servers
+ 
+backend web_servers
+    balance roundrobin
+    option httpchk GET /
+    server web1 127.0.0.1:8081 check
+    server web2 127.0.0.1:8082 check
+',
+    notify => Service['haproxy'],
+  }
+
+
+31. Validate HAProxy
+On Agent:
+sudo haproxy -c -f /etc/haproxy/haproxy.cfg
+Expected:
+Configuration file is valid
+
+32. Restart HAProxy
+sudo systemctl restart haproxy
+Check:
+sudo systemctl status haproxy
+
+PART G — DEMONSTRATE 
+LOAD BALANCING
+Now the fun part.
+Run:
+
+curl http://localhost
+
+You should get:
+WEB SERVER 1
+Run again:
+
+curl http://localhost
+
+You may get:
+WEB SERVER 2
+Again:
+
+curl http://localhost
+Again:
+
+WEB SERVER 1
+Because we configured:
+balance roundrobin
+HAProxy distributes requests between:
+127.0.0.1:8081
+127.0.0.1:8082
+
+33. Demonstrate it clearly
+Run:
+for i in {1..10}; do curl -s http://localhost | grep '<h1>'; done
+Expected:
+<h1>WEB SERVER 1</h1>
+<h1>WEB SERVER 2</h1>
+<h1>WEB SERVER 1</h1>
+<h1>WEB SERVER 2</h1>
+<h1>WEB SERVER 1</h1>
+<h1>WEB SERVER 2</h1>
+
+Done
+
+
+PART I — FAILURE DEMONSTRATION
+
+
+36. Stop Web Server 1
+
+we'll temporarily
+ block port 8081.
+Run:
+
+sudo ufw deny 8081/tcp
+
+
+
+37. Check HAProxy
+Run:
+curl http://localhost
+Repeat:
+
+for i in {1..10}; do curl -s http://
+localhost | grep '<h1>'; done
+
+Now you should see only:
+<h1>WEB SERVER 2</h1>
+<h1>WEB SERVER 2</h1>
+<h1>WEB SERVER 2</h1>
+...
+This demonstrates:
+HAProxy detected the unhealthy 
+backend and stopped sending 
+traffic to it.
+That is the core concept behind l
+oad-balancing cluster monitoring.
+
+
+
+
+Last : 
+
+34. Check HAProxy statistics
+Install the HAProxy stats socket tools 
+if needed:
+sudo apt install -y socat
+Add a stats socket to the HAProxy configuration.
+Modify:
+global
+to:
+global
+    log /dev/log local0
+    log /dev/log local1 notice
+    stats socket /run/haproxy/admin.sock
+ mode 660 level admin
+    daemon
+Run:
+sudo systemctl restart haproxy
+
+
+
+35. Check backend status
+Run:
+echo "show stat" | sudo socat stdio /run/haproxy/admin.sock
+You'll see HAProxy 
+statistics including backend states.
+This is a good point to explain:
+HAProxy
+   |
+   +---- health check ----> Web Server 1
+   |
+   +---- health check ----> Web Server 2
+   
+   
+   
+   notify => Service['nginx'],
+                  }
+
+        file { '/etc/nginx/sites-enabled/default':
+                 ensure => absent ,
+                 notify => Service['nginx'],
+        }
+       file { '/etc/nginx/sites-enabled/backend1':
+    ensure  => link,
+    target => '/etc/nginx/sites-available/backend1',
+    require => File['/etc/nginx/sites-available/backend1'],
+    notify  => Service['nginx'],
+  }
+ file { '/etc/nginx/sites-enabled/backend2':
+    ensure  => link,
+    target => '/etc/nginx/sites-available/backend2',
+    require => File['/etc/nginx/sites-available/backend2'],
+    notify  => Service['nginx'],
+  }
+
+
+
+}

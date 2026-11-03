@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puppet Server + Agent on AWS EC2 (Corrected Guide)</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 { color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        h2 { color: #34495e; margin-top: 30px; border-bottom: 1px solid #eee; padding-bottom: 5px;}
+        h3 { color: #555; }
+        pre {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: Consolas, Monaco, "Courier New", monospace;
+            font-size: 14px;
+        }
+        code {
+            font-family: Consolas, Monaco, "Courier New", monospace;
+            background-color: #e8e8e8;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffecb5;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .warning strong { color: #856404; }
+        .expected {
+            background-color: #d4edda;
+            border-left: 5px solid #c3e6cb;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        hr { border: 0; border-top: 1px solid #ddd; margin: 30px 0; }
+    </style>
+</head>
+<body>
+
+    <h1>Puppet Server + Puppet Agent on AWS EC2 (Corrected Guide)</h1>
+
+    <p>This practical demonstrates a working Puppet Server + Puppet Agent setup using two AWS EC2 Ubuntu instances.</p>
+
+    <div class="warning">
+        <strong>⚠️ CRITICAL PREREQUISITES:</strong>
+        <ol>
+            <li><strong>RAM Requirement:</strong> Puppet Server 8 requires <strong>at least 4GB of RAM</strong> to generate its Certificate Authority. You <strong>must</strong> use a <code>t3.medium</code> (or larger) for the Server instance. Using a <code>t2.micro</code> or <code>t3.small</code> will cause the service to crash on startup.</li>
+            <li><strong>Packaging Paths:</strong> The new <code>puppet8-release-noble.deb</code> package uses different paths than older tutorials.
+                <ul>
+                    <li>Config: <code>/etc/puppet/puppet.conf</code></li>
+                    <li>SSL: <code>/var/lib/puppet/ssl</code></li>
+                    <li>Code: <code>/etc/puppet/code/</code></li>
+                </ul>
+            </li>
+            <li><strong>Certnames:</strong> Every node must have a unique <code>certname</code>. Never set <code>certname = puppet-agent</code> on the Server. The Server must use its own FQDN.</li>
+        </ol>
+    </div>
+
+    <hr>
+
+    <h2>Part 1: Launch Instances &amp; Get IPs</h2>
+    <ol>
+        <li>Launch <strong>2 instances</strong> (Ubuntu 24.04 LTS).
+            <ul>
+                <li><strong>Server Instance:</strong> Name it <code>puppet-server</code>, type <code>t3.medium</code> (4GB RAM).</li>
+                <li><strong>Agent Instance:</strong> Name it <code>puppet-agent</code>, type <code>t3.micro</code> (1GB RAM).</li>
+            </ul>
+        </li>
+        <li><strong>Security Group:</strong> Allow SSH (22) from your IP. Allow Custom TCP (8140) from the <strong>Agent's Security Group</strong> (or the VPC CIDR, e.g., <code>172.31.0.0/16</code>). Do not expose 8140 to the whole internet.</li>
+        <li><strong>Note the Private IPs:</strong>
+            <ul>
+                <li>Server Private IP: <code>_________________</code> (e.g., <code>172.31.14.71</code>)</li>
+                <li>Agent Private IP: <code>_________________</code> (e.g., <code>172.31.10.226</code>)</li>
+            </ul>
+        </li>
+    </ol>
+
+    <hr>
+
+    <h2>Part 2: Setup Puppet Server</h2>
+    <p>SSH into your <strong>Server</strong> instance.</p>
+
+    <pre><code># 1. Update and install the Puppet 8 repository
+sudo apt update &amp;&amp; sudo apt upgrade -y
+wget https://apt-puppetcore.puppet.com/public/puppet8-release-noble.deb
+sudo dpkg -i puppet8-release-noble.deb
+sudo apt update
+
+# 2. Install Puppet Server
+sudo apt install puppetserver -y
+
+# 3. Configure Puppet Server
+# IMPORTANT: Do NOT add "certname" here. The server must use its own FQDN.
+sudo nano /etc/puppet/puppet.conf</code></pre>
+
+    <p>Make sure your <code>puppet.conf</code> looks <strong>exactly</strong> like this (delete any <code>server =</code> or <code>certname =</code> lines):</p>
+    <pre><code>[main]
+# Leave this section empty or with comments only.
+# DO NOT add certname = puppet-agent here!</code></pre>
+    <p>Save and exit (<code>Ctrl+O</code>, <code>Enter</code>, <code>Ctrl+X</code>).</p>
+
+    <pre><code># 4. Ensure permissions are correct
+sudo chown -R puppet:puppet /var/lib/puppet
+
+# 5. Manually generate the CA (prevents the service from crashing on startup)
+sudo puppetserver ca setup
+
+# 6. Start the Puppet Server
+sudo systemctl enable puppetserver
+sudo systemctl start puppetserver
+sudo systemctl status puppetserver</code></pre>
+    <p><em>Press <code>q</code> to exit the status view. Wait 30 seconds.</em></p>
+
+    <pre><code># 7. Verify the server is serving the correct certificate
+sudo openssl s_client -connect 127.0.0.1:8140 -showcerts &lt;/dev/null 2&gt;/dev/null | openssl x509 -noout -subject -issuer</code></pre>
+
+    <p><strong>Expected Output:</strong></p>
+    <div class="expected">
+        subject=CN = ip-172-31-14-71.ap-south-1.compute.internal<br>
+        issuer=CN = Puppet CA: ip-172-31-14-71.ap-south-1.compute.internal
+    </div>
+    <p><em>(Notice the subject is the server's FQDN, NOT <code>puppet-agent</code>).</em></p>
+
+    <hr>
+
+    <h2>Part 3: Setup Puppet Agent</h2>
+    <p>Open a <strong>new terminal</strong> and SSH into your <strong>Agent</strong> instance.</p>
+
+    <pre><code># 1. Update and install the Puppet 8 repository
+sudo apt update
+wget https://apt-puppetcore.puppet.com/public/puppet8-release-noble.deb
+sudo dpkg -i puppet8-release-noble.deb
+sudo apt update
+
+# 2. Install Puppet Agent
+sudo apt install puppet-agent -y
+
+# 3. Configure the Agent
+sudo nano /etc/puppet/puppet.conf</code></pre>
+
+    <p>Add these lines under <code>[main]</code> (replace <code>&lt;SERVER_PRIVATE_IP&gt;</code> with your actual Server IP):</p>
+    <pre><code>[main]
+server = &lt;SERVER_PRIVATE_IP&gt;
+certname = puppet-agent</code></pre>
+    <p>Save and exit.</p>
+
+    <pre><code># 4. Map the server IP to the name "puppet" in the hosts file
+sudo nano /etc/hosts</code></pre>
+    <p>Add this line at the bottom (replace with your Server IP):</p>
+    <pre><code>172.31.14.71 puppet</code></pre>
+    <p>Save and exit.</p>
+
+    <pre><code># 5. Start the agent service
+sudo systemctl start puppet
+
+# 6. Test the connection (This will generate a CSR)
+sudo puppet agent --test</code></pre>
+
+    <p><strong>Expected Output:</strong></p>
+    <div class="expected">
+        Info: Creating a new RSA SSL key for puppet-agent<br>
+        Notice: Did not receive certificate
+    </div>
+    <p><em>(If you still see <code>unable to get local issuer certificate</code>, run <code>sudo systemctl stop puppet &amp;&amp; sudo rm -rf /var/lib/puppet/ssl &amp;&amp; sudo systemctl start puppet</code> and try again).</em></p>
+
+    <hr>
+
+    <h2>Part 4: Sign the Agent Certificate</h2>
+    <p>Go back to your <strong>Server</strong> terminal.</p>
+
+    <pre><code># 1. List the pending certificate requests
+sudo puppetserver ca list
+
+# 2. Sign the agent's certificate
+sudo puppetserver ca sign --certname puppet-agent</code></pre>
+    <p><strong>Expected Output:</strong> <code>Successfully signed certificate request for puppet-agent</code></p>
+
+    <hr>
+
+    <h2>Part 5: Apply the Configuration</h2>
+    <p>Go back to your <strong>Agent</strong> terminal.</p>
+
+    <pre><code>sudo puppet agent --test</code></pre>
+    <p><strong>Expected Output:</strong></p>
+    <pre><code>Notice: Requesting catalog from 172.31.14.71:8140
+Notice: Catalog compiled by ip-172-31-14-71.ap-south-1.compute.internal
+Info: Caching catalog for puppet-agent
+Info: Applying configuration version '...'
+Notice: Applied catalog in 0.01 seconds</code></pre>
+
+    <hr>
+
+    <h2>Part 6: Create and Apply a Manifest</h2>
+    <p>On the <strong>Server</strong>:</p>
+
+    <pre><code># 1. Create the manifest directory
+sudo mkdir -p /etc/puppet/code/environments/production/manifests
+
+# 2. Create the manifest file
+sudo nano /etc/puppet/code/environments/production/manifests/site.pp</code></pre>
+    <p>Paste this exact code:</p>
+    <pre><code>file { '/tmp/hello.txt':
+  ensure  =&gt; file,
+  content =&gt; "Hello from Puppet Server!\n",
+}</code></pre>
+    <p>Save and exit.</p>
+
+    <pre><code># 3. Validate the syntax
+sudo puppet parser validate /etc/puppet/code/environments/production/manifests/site.pp
+# (No output means it's correct)</code></pre>
+
+    <p>On the <strong>Agent</strong>:</p>
+
+    <pre><code># 1. Run the agent again
+sudo puppet agent --test</code></pre>
+    <p><strong>Expected Output:</strong> <code>Notice: /Stage[main]/Main/File[/tmp/hello.txt]/ensure: created</code></p>
+
+    <pre><code># 2. Verify the file was created
+cat /tmp/hello.txt</code></pre>
+    <p><strong>Expected Output:</strong> <code>Hello from Puppet Server!</code></p>
+
+    <hr>
+
+    <h2>🚨 Troubleshooting Cheat Sheet (If things break)</h2>
+    <p>If you ever get the <code>unable to get local issuer certificate</code> error again, it means the SSL state is corrupted. Run this <strong>"Nuclear Option"</strong> on the <strong>Agent</strong>:</p>
+
+    <pre><code>sudo systemctl stop puppet
+sudo rm -rf /var/lib/puppet/ssl
+sudo rm -rf /var/cache/puppet/state
+sudo systemctl start puppet
+sudo puppet agent --test</code></pre>
+    <p>Then go to the <strong>Server</strong> and run <code>sudo puppetserver ca sign --certname puppet-agent</code> again.</p>
+
+    <p>If the <strong>Server</strong> crashes (<code>Job for puppetserver.service failed</code>), check the logs:</p>
+    <pre><code>sudo journalctl -u puppetserver -n 50 --no-pager</code></pre>
+    <p>If it says <code>OutOfMemory</code>, stop your EC2 instance, change the instance type to <code>t3.medium</code> (4GB RAM), and start it again.</p>
+
+</body>
+</html>

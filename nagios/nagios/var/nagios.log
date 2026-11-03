@@ -1,0 +1,39 @@
+[1792668569] Nagios 4.5.12 starting... (PID=23)
+[1792668569] Local time is Thu Oct 22 11:29:29 UTC 2026
+[1792668569] LOG VERSION: 2.0
+[1792668569] qh: Socket '/opt/nagios/var/rw/nagios.qh' successfully initialized
+[1792668569] qh: core query handler registered
+[1792668569] qh: echo service query handler registered
+[1792668569] qh: help for the query handler registered
+[1792668569] wproc: Successfully registered manager as @wproc with query handler
+[1792668569] wproc: Registry request: name=Core Worker 47;pid=47
+[1792668569] wproc: Registry request: name=Core Worker 50;pid=50
+[1792668569] wproc: Registry request: name=Core Worker 49;pid=49
+[1792668569] wproc: Registry request: name=Core Worker 46;pid=46
+[1792668569] wproc: Registry request: name=Core Worker 48;pid=48
+[1792668569] wproc: Registry request: name=Core Worker 51;pid=51
+[1792668572] Successfully launched command file worker with pid 62
+[1792668583] Caught SIGTERM, shutting down...
+[1792668583] Successfully shutdown... (PID=23)
+[1793099376] Nagios 4.5.12 starting... (PID=21)
+[1793099376] Local time is Tue Oct 27 11:09:36 UTC 2026
+[1793099376] LOG VERSION: 2.0
+[1793099376] qh: Socket '/opt/nagios/var/rw/nagios.qh' successfully initialized
+[1793099376] qh: core query handler registered
+[1793099376] qh: echo service query handler registered
+[1793099376] qh: help for the query handler registered
+[1793099376] wproc: Successfully registered manager as @wproc with query handler
+[1793099377] wproc: Registry request: name=Core Worker 39;pid=39
+[1793099377] wproc: Registry request: name=Core Worker 42;pid=42
+[1793099377] wproc: Registry request: name=Core Worker 40;pid=40
+[1793099377] wproc: Registry request: name=Core Worker 41;pid=41
+[1793099377] wproc: Registry request: name=Core Worker 43;pid=43
+[1793099377] wproc: Registry request: name=Core Worker 44;pid=44
+[1793099385] Successfully launched command file worker with pid 63
+[1793099385] Error: Could not create external command file '/opt/nagios/var/rw/nagios.cmd' as named pipe: (17) -> File exists.  If this file already exists and you are sure that another copy of Nagios is not running, you should delete this file.
+[1793099505] SERVICE ALERT: localhost;HTTP;WARNING;SOFT;1;HTTP WARNING: HTTP/1.1 401 Unauthorized - 695 bytes in 0.002 second response time
+[1793099565] SERVICE ALERT: localhost;HTTP;WARNING;SOFT;2;HTTP WARNING: HTTP/1.1 401 Unauthorized - 695 bytes in 0.002 second response time
+[1793099625] SERVICE ALERT: localhost;HTTP;WARNING;SOFT;3;HTTP WARNING: HTTP/1.1 401 Unauthorized - 695 bytes in 0.001 second response time
+[1793099685] SERVICE ALERT: localhost;HTTP;WARNING;HARD;4;HTTP WARNING: HTTP/1.1 401 Unauthorized - 695 bytes in 0.002 second response time
+[1793100362] Caught SIGTERM, shutting down...
+[1793100362] Successfully shutdown... (PID=21)
